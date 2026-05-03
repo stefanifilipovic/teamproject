@@ -1,53 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Note App</title>
-<link rel="stylesheet" href="style.css">
+    <title>Product Review Page</title>
+    <style>
+      
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            width: 300px;
+        }
+        .review-item {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-<h1>Student Note App</h1>
-<p class="subtitle">Enter a student name and a short note.</p>
 
-<form action="save.php" method="post" onsubmit="return validateForm();">
-<label for="name">Student Name</label>
-<input type="text" id="name" name="name" placeholder="Enter name">
+    <h1>Product Reviews</h1>
 
-<label for="note">Note</label>
-<input type="text" id="note" name="note" placeholder="Enter short note">
+    <!-- FORM SECTION -->
+    <div class="form-section">
+        <h3>Submit a Review</h3>
+        <form method="POST" action="index.php">
+            <label>Product Name:</label>
+            <input type="text" name="product_name" required>
 
-<button type="submit">Save Note</button>
-</form>
+            <label>Username:</label>
+            <input type="text" name="username" required>
 
-<h2>Saved Notes</h2>
-<div class="list-box">
-<?php
-$file = "data.json";
+            <label>Rating (1-5):</label>
+            <input type="number" name="rating" min="1" max="5" required>
 
-if (file_exists($file)) {
-$data = file_get_contents($file);
-$notes = json_decode($data, true);
+            <label>Comment:</label>
+            <textarea name="comment" rows="4" required></textarea>
 
-if (!empty($notes)) {
-echo "<ul>";
-foreach ($notes as $item) {
-$safeName = htmlspecialchars($item["name"]);
-$safeNote = htmlspecialchars($item["note"]);
-echo "<li><strong>$safeName</strong>: $safeNote</li>";
-}
-echo "</ul>";
-} else {
-echo "<p>No notes yet.</p>";
-}
-} else {
-echo "<p>No notes yet.</p>";
-}
-?>
-</div>
-</div>
+            <label>Date:</label>
+            <input type="date" name="review_date" required>
 
-<script src="script.js"></script>
+            <br><br>
+            <button type="submit" name="submit_review">Post Review</button>
+        </form>
+    </div>
+
+    <hr>
+
+    <!-- DATA LIST SECTION -->
+    <h2>Recent Reviews</h2>
+    <div id="reviews-list">
+        <?php
+        // This part checks if the form was submitted
+        if (isset($_POST['submit_review'])) {
+            $product = $_POST['product_name'];
+            $user = $_POST['username'];
+            $rating = $_POST['rating'];
+            $comment = $_POST['comment'];
+            $date = $_POST['review_date'];
+
+          
+           
+            echo "<div class='review-item'>";
+            echo "<strong>Product:</strong> " . $product . "<br>";
+            echo "<strong>User:</strong> " . $user . " | <strong>Rating:</strong> " . $rating . "/5<br>";
+            echo "<strong>Date:</strong> " . $date . "<br>";
+            echo "<strong>Comment:</strong> " . $comment;
+            echo "</div>";
+        } else {
+            echo "<p>No reviews yet. Be the first to post!</p>";
+        }
+        ?>
+    </div>
+
 </body>
 </html>
